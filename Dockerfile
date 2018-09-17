@@ -1,13 +1,8 @@
-FROM sagemath/sagemath:8.3
+FROM sagemath/sagemath
 
-ENV NB_USER=sage
-ENV HOME /home/sage
+MAINTAINER Erik M. Bray <erik.bray@lri.fr>
 
-# Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
-USER root
-RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
-USER ${NB_USER}
-
+ARG SAGE_BRANCH=master
 EXPOSE 8888
-CMD ["jupyter", "notebook", "--notebook-dir=notebooks", "--ip", "'*'", "--port", "8888"]
+
+ENTRYPOINT sage -n jupyter --no-browser --ip=$(grep `hostname` /etc/hosts | cut -f1) --port=8888
